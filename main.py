@@ -6,7 +6,7 @@ def DownloadImages(amount):
         os.makedirs(sys.path[0] + '\\' + "reddit")
 
     path = str(sys.path[0] + '\\' + "reddit")
-
+    print(path)
     url = "https://www.reddit.com/"
 
     with open(os.path.join(sys.path[0], "credentials.json"), "r") as f:
