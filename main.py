@@ -1,4 +1,4 @@
-from Unidecode import Unidecode
+from unidecode import unidecode
 import os, shutil, unicodedata, json, praw, requests
 
-path = '/memes'
+path = '/reddit'
