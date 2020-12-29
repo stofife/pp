@@ -17,12 +17,11 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
                 break
             count += 1
     path = __location__ + "\\" + folder
-    print(path)
+    'print(path)'
     url = "https://www.reddit.com/"
 
     with open(os.path.join(__location__, "credentials.json"), "r") as f:
         data = json.load(f)
-        print(data)
 
     reddit = praw.Reddit(
                     client_id=data['client_id'],
@@ -47,5 +46,16 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
             r = requests.get(url)
             with open(os.path.join(path,str(count)+".png"), "wb") as f:
                 f.write(r.content)
+ 
+
+def DeleteDownloaded(folder):
+    loc = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder
+    print(loc)
+    amount = len([name for name in os.listdir(loc) if os.path.isfile(loc + '\\' + name)]) + 1
+    print("Deleting the contents of: " + folder)
+    for file in range(amount):
+        if os.path.exists(loc + '\\' + str(file) + ".png"):
+            os.remove(loc + '\\' + str(file) + ".png")
+            print("Succesfully deleted " + str(file) + ".png")
 
 DownloadImages("furry", 50)
