@@ -1,15 +1,21 @@
-from unidecode import unidecode
-import sys, os, shutil, unicodedata, json, praw, requests
+import os
+import sys
+import json
+import requests
 
-def DownloadImages(amount):
-    if not os.path.exists("reddit"):
-        os.makedirs(sys.path[0] + '\\' + "reddit")
+import praw
 
-    path = str(sys.path[0] + '\\' + "reddit")
+def DownloadImages(amount: int, folder: str = "reddit", ext: list = [".jpg",".png"]) -> None:
+    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder
+    if not os.path.exists(__location__):
+        os.makedirs(__location__)
+
+    path = __location__
     print(path)
     url = "https://www.reddit.com/"
+    workingpath = path.replace("reddit", "")
 
-    with open(os.path.join(sys.path[0], "credentials.json"), "r") as f:
+    with open(os.path.join(workingpath, "credentials.json"), "r") as f:
         data = json.load(f)
         print(data)
 
@@ -25,29 +31,19 @@ def DownloadImages(amount):
 
     name = 0
 
-    for sub in subreddit.hot(limit=100):
-        name += 1
+    for sub in subreddit.new(limit=100):
+        print(name)
 
-        if name == amount + 1:
+        if name == amount:
             break
         else:
             url = (sub.url)
-            file_name = str(name)
-            if url.endswith(".jpg"):
-                file_name += ".jpg"
-                foundfile = True
-            elif url.endswith(".png"):
-                file_name += ".png"
-                foundfile = True
-            else:
-                foundfile = False
+            if not url.endswith(tuple(ext)):
+                continue
+            name += 1
 
-            if foundfile == True:
-                r = requests.get(url)
-                with open(file_name, "wb") as f:
-                    f.write(r.content)
-                file_path = sys.path[0]
-                file_path = file_path.replace('pp', '')
-                shutil.move(file_path + file_name, path)
+            r = requests.get(url)
+            with open(os.path.join(path,str(name)+".png"), "wb") as f:
+                f.write(r.content)
 
 DownloadImages(50)
