@@ -32,7 +32,7 @@ def DownloadImages(amount: int, folder: str = "reddit", ext: list = [".jpg",".pn
     name = 0
 
     for sub in subreddit.new(limit=100):
-        print(name)
+        
 
         if name == amount:
             break
