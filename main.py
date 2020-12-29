@@ -8,14 +8,7 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
     __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
     if not os.path.exists(__location__ + "\\" + folder):
         os.makedirs(__location__ + "\\" + folder)
-    else:
-        count = 1
-        while True:
-            if not os.path.exists(__location__ + "\\" + folder + "_" + str(count)):
-                os.makedirs(__location__ + "\\" + folder + "_" + str(count))
-                folder = folder + "_" + str(count)
-                break
-            count += 1
+   
     path = __location__ + "\\" + folder
     
     print(path)
@@ -60,3 +53,4 @@ def DeleteDownloaded(folder):
             print("Succesfully deleted " + str(file) + ".png")
 
 DownloadImages("furry", 50)
+DeleteDownloaded("reddit")
