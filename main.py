@@ -17,7 +17,8 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
                 break
             count += 1
     path = __location__ + "\\" + folder
-    'print(path)'
+    
+    print(path)
     url = "https://www.reddit.com/"
 
     with open(os.path.join(__location__, "credentials.json"), "r") as f:
