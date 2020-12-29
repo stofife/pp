@@ -1,21 +1,26 @@
 import os
-import sys
 import json
 import requests
 
 import praw
 
-def DownloadImages(amount: int, folder: str = "reddit", ext: list = [".jpg",".png"]) -> None:
-    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder
-    if not os.path.exists(__location__):
-        os.makedirs(__location__)
-
-    path = __location__
+def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext: list = [".jpg",".png"]) -> None:
+    __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    if not os.path.exists(__location__ + "\\" + folder):
+        os.makedirs(__location__ + "\\" + folder)
+    else:
+        count = 1
+        while True:
+            if not os.path.exists(__location__ + "\\" + folder + "_" + str(count)):
+                os.makedirs(__location__ + "\\" + folder + "_" + str(count))
+                folder = folder + "_" + str(count)
+                break
+            count += 1
+    path = __location__ + "\\" + folder
     print(path)
     url = "https://www.reddit.com/"
-    workingpath = path.replace("reddit", "")
 
-    with open(os.path.join(workingpath, "credentials.json"), "r") as f:
+    with open(os.path.join(__location__, "credentials.json"), "r") as f:
         data = json.load(f)
         print(data)
 
@@ -27,23 +32,20 @@ def DownloadImages(amount: int, folder: str = "reddit", ext: list = [".jpg",".pn
                     username=data['username']
     )
 
-    subreddit = reddit.subreddit("furry")
+    subreddit = reddit.subreddit(subreddit_name)
 
-    name = 0
+    count = 0
 
-    for sub in subreddit.new(limit=100):
-        
-
-        if name == amount:
+    for sub in subreddit.new(limit=amount*2):
+        if count == amount:
             break
         else:
             url = (sub.url)
             if not url.endswith(tuple(ext)):
                 continue
-            name += 1
-
+            count += 1
             r = requests.get(url)
-            with open(os.path.join(path,str(name)+".png"), "wb") as f:
+            with open(os.path.join(path,str(count)+".png"), "wb") as f:
                 f.write(r.content)
 
-DownloadImages(50)
+DownloadImages("furry", 50)
