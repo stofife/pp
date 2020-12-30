@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import praw
+import numpy
 from PIL import Image
 
 def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext: list = [".jpg",".png"]) -> None:
@@ -73,7 +74,14 @@ def ResizeImage(name, nw, nh, folder, newfolder = "resized"):
     #print("Image was resized and saved to: " + cwd + "\\" + newfolder)
 
 
-DownloadImages("furry", 10)
-for i in range(10):
-   ResizeImage(str(i+1), 120, 90, "reddit")
+def RGBtoArray(name: str, folder = "resized"):
+
+    img = Image.open(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder + "\\" + name + ".png")
+
+    return numpy.asarray(img)
+
+
+#DownloadImages("furry", 10)
+#for i in range(10):
+#   ResizeImage(str(i+1), 120, 90, "reddit")
 #DeleteImages("reddit")
