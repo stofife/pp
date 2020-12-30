@@ -2,7 +2,7 @@ import os
 import json
 import requests
 import praw
-import numpy
+import numpy as np
 from PIL import Image
 
 def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext: list = [".jpg",".png"]) -> None:
@@ -41,10 +41,11 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
             with open(os.path.join(path,str(count)+".png"), "wb") as f:
                 f.write(r.content)
  
+def cwd(): return os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 def DeleteImages(folder):
 
-    loc = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder
+    loc = cwd() + "\\" + folder
 
     amount = len([name for name in os.listdir(loc) if os.path.isfile(loc + '\\' + name)]) + 1
 
@@ -60,27 +61,35 @@ def DeleteImages(folder):
 
 def ResizeImage(name, nw, nh, folder, newfolder = "resized"):
 
-    cwd = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+    if not os.path.exists(cwd() + "\\" + newfolder):
+        os.makedirs(cwd() + "\\" + newfolder)
 
-    if not os.path.exists(cwd + "\\" + newfolder):
-        os.makedirs(cwd + "\\" + newfolder)
-
-    img = Image.open(cwd + "\\" + folder + "\\" + name + ".png")
+    img = Image.open(cwd() + "\\" + folder + "\\" + name + ".png")
 
     img = img.resize((nw, nh), Image.BICUBIC)
 
-    img.save(cwd + "\\" + newfolder + "\\" + name + ".png")
+    img.save(cwd() + "\\" + newfolder + "\\" + name + ".png")
     # Uncomment this when debugging ;3
-    #print("Image was resized and saved to: " + cwd + "\\" + newfolder)
+    #print("Image was resized and saved to: " + cwd() + "\\" + newfolder)
 
 
 def RGBtoArray(name: str, folder = "resized"):
 
-    img = Image.open(os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder + "\\" + name + ".png")
+    img = Image.open(cwd() + "\\" + folder + "\\" + name + ".png")
 
-    return numpy.asarray(img)
+    return np.asarray(img)
 
 
+def GenerateFeatureMap(array, is3d = False):
+    if is3d != False:
+        slice = array[:, :, 1]
+        print(slice.shape)
+
+
+ResizeImage(str(1), 120, 90, "samples")
+w = RGBtoArray(str(1), "resized")
+print(w.shape)
+GenerateFeatureMap(w, True)
 #DownloadImages("furry", 10)
 #for i in range(10):
 #   ResizeImage(str(i+1), 120, 90, "reddit")
