@@ -1,8 +1,8 @@
 import os
 import json
 import requests
-
 import praw
+from PIL import Image
 
 def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext: list = [".jpg",".png"]) -> None:
     __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -11,7 +11,6 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
    
     path = __location__ + "\\" + folder
     
-    print(path)
     url = "https://www.reddit.com/"
 
     with open(os.path.join(__location__, "credentials.json"), "r") as f:
@@ -29,7 +28,7 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
 
     count = 0
 
-    for sub in subreddit.new(limit=amount*2):
+    for sub in subreddit.hot(limit=amount*2):
         if count == amount:
             break
         else:
@@ -42,15 +41,39 @@ def DownloadImages(subreddit_name: str, amount: int, folder: str = "reddit", ext
                 f.write(r.content)
  
 
-def DeleteDownloaded(folder):
+def DeleteImages(folder):
+
     loc = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))) + "\\" + folder
-    print(loc)
+
     amount = len([name for name in os.listdir(loc) if os.path.isfile(loc + '\\' + name)]) + 1
-    print("Deleting the contents of: " + folder)
+
+    # Uncomment this when debugging ;3
+    # print("Deleting the contents of: " + folder)
+
     for file in range(amount):
         if os.path.exists(loc + '\\' + str(file) + ".png"):
             os.remove(loc + '\\' + str(file) + ".png")
-            print("Succesfully deleted " + str(file) + ".png")
+            # Uncomment this when debugging ;3
+            #print("Successfully deleted: " + str(file) + ".png")
 
-DownloadImages("furry", 50)
-DeleteDownloaded("reddit")
+
+def ResizeImage(name, nw, nh, folder, newfolder = "resized"):
+
+    cwd = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+    if not os.path.exists(cwd + "\\" + newfolder):
+        os.makedirs(cwd + "\\" + newfolder)
+
+    img = Image.open(cwd + "\\" + folder + "\\" + name + ".png")
+
+    img = img.resize((nw, nh), Image.BICUBIC)
+
+    img.save(cwd + "\\" + newfolder + "\\" + name + ".png")
+    # Uncomment this when debugging ;3
+    #print("Image was resized and saved to: " + cwd + "\\" + newfolder)
+
+
+DownloadImages("furry", 10)
+for i in range(10):
+   ResizeImage(str(i+1), 120, 90, "reddit")
+#DeleteImages("reddit")
