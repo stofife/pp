@@ -109,7 +109,7 @@ def PixelPooling(array, pooldim: int, option: str = "AVERAGE"):
                 newarray[column][r] = avg
 
                 result = 0
-                
+
         return newarray
 
     if option == "AVERAGE":
@@ -131,4 +131,3 @@ for file in range(1, 2):
     print(colorarray.shape)
     pooled = PixelPooling(colorarray, 3)
     print(pooled.shape)
-
