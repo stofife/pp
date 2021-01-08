@@ -165,7 +165,9 @@ def main(*args,**kwargs) -> None:
 
     similarity = int(input("Similarity?"))
 
-    images, original = prepare("hentai",50)
+    sub = input("Subreddit name?")
+
+    images, original = prepare(sub,50)
     samples = get_samples()
     max_pools = 5
     labels = list(range(1,len(images)+1))
