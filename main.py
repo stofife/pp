@@ -147,7 +147,7 @@ if not os.path.exists(os.path.join(cwd(), "found")):
         os.makedirs(os.path.join(cwd(), "found"))
 
 
-DownloadImages("hentai", 50, folder)
+DownloadImages("furry", 30, folder)
 
 sim = input("At least how similar do you want the pictures to be? (Press Enter to leave it at the default value): ")
 
