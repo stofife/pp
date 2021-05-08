@@ -58,7 +58,7 @@ def DeleteImages(folder):
     loc = os.path.join(cwd(), folder)
 
     amount = FileCount(folder)
-    # Uncomment this when debugging ;3
+    # Uncomment this when debugging ;3 .
     # print("Deleting the contents of: " + folder)
 
     for file in range(1, amount + 1):
